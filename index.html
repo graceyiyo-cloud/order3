@@ -6,83 +6,99 @@
     <title>1/26(一)年會排演工作人員點餐</title>
     <style>
         :root {
-            --primary-color: #D32F2F; /* 麻古紅 */
-            --bg-color: #f5f5f5;
-            --text-color: #000000; /* 純黑 */
+            /* 專業配色：深海藍搭配冷灰 */
+            --primary-color: #2c3e50;    /* 深藍色 (主要) */
+            --accent-color: #3498db;     /* 亮藍色 (強調) */
+            --bg-color: #eaeff2;         /* 背景色 (淡灰藍) */
+            --card-bg: #ffffff;          /* 卡片白 */
+            --text-main: #2c3e50;        /* 主要文字 */
+            --text-sub: #7f8c8d;         /* 次要文字 */
+            --border-color: #dce4ec;     /* 邊框色 */
+            --success-color: #27ae60;    /* 成功綠 */
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
             margin: 0;
-            padding: 20px;
-            color: var(--text-color);
+            padding: 40px 20px;
+            color: var(--text-main);
+            line-height: 1.6;
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(44, 62, 80, 0.1); /* 柔和深邃的陰影 */
         }
 
         header {
             text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
+            margin-bottom: 35px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
         }
 
         h1 {
             color: var(--primary-color);
-            margin: 0;
-            letter-spacing: 2px;
-            font-size: 24px;
+            margin: 0 0 10px 0;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-sub);
         }
         
         header p {
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-top: 10px;
+            font-weight: 700;
+            font-size: 1.5em;
+            margin: 0;
+            color: var(--text-main);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
-            font-size: 1em;
+            font-weight: 600;
+            font-size: 0.95em;
+            color: var(--text-main);
         }
 
-        /* 輸入框與下拉選單樣式 */
+        /* 輸入框與下拉選單樣式 - 更加平整現代 */
         input, select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             font-size: 16px;
             box-sizing: border-box;
-            background-color: #fff;
-            color: black !important;
+            background-color: #f9fbfc;
+            color: #2c3e50 !important;
+            transition: all 0.3s ease;
         }
 
         input:focus, select:focus {
-            border-color: var(--primary-color);
+            border-color: var(--accent-color);
+            background-color: #fff;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
         
         optgroup {
-            color: var(--primary-color);
-            font-weight: bold;
+            color: var(--accent-color);
+            font-weight: 700;
         }
         
         option {
-            color: black;
+            color: #333;
+            padding: 5px;
         }
 
         /* 按鈕式選項樣式 (甜度/冰塊) */
@@ -94,112 +110,138 @@
         
         .option-btn {
             padding: 10px 5px;
-            border: 1px solid #ccc;
-            background-color: white;
-            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: #fff;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 15px;
-            transition: all 0.2s;
-            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-sub);
+            transition: all 0.2s ease;
         }
         
         .option-btn:hover {
-            background-color: #ffebee;
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background-color: #f4f9fd;
         }
         
+        /* 被選中的狀態 - 深藍色實心 */
         .option-btn.active {
             background-color: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
-            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(44, 62, 80, 0.2);
         }
 
         .price-display {
             text-align: right;
-            font-size: 1.3em;
+            font-size: 1.4em;
             color: var(--primary-color);
-            font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            border-top: 1px dashed #ccc;
-            padding-top: 15px;
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .price-display span:first-child {
+            font-size: 0.6em;
+            color: var(--text-sub);
+            font-weight: normal;
         }
 
-        /* 送出按鈕 */
+        /* 送出按鈕 - 漸層深藍 */
         .submit-btn {
             width: 100%;
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 15px;
+            padding: 16px;
             border: none;
             border-radius: 8px;
             font-size: 18px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: transform 0.1s, box-shadow 0.3s;
+            letter-spacing: 1px;
         }
 
         .submit-btn:hover {
-            background-color: #b71c1c;
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
         }
 
         .submit-btn:disabled {
-            background-color: #ccc;
+            background: #bdc3c7;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         .loading {
             display: none;
             text-align: center;
-            margin-top: 10px;
-            color: #666;
+            margin-top: 15px;
+            color: var(--text-sub);
+            font-size: 0.9em;
         }
         
         /* 成功訊息區域 */
         .success-msg {
             display: none;
             text-align: center;
-            padding-top: 10px;
+            padding-top: 20px;
         }
         
         .success-title {
-            color: #2e7d32;
-            font-size: 1.4em;
-            font-weight: bold;
-            margin-bottom: 20px;
+            color: var(--success-color);
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 30px;
         }
 
-        /* 通用連結按鈕樣式 */
+        /* 連結按鈕共用樣式 */
         .action-btn {
             display: inline-block;
-            padding: 10px 25px;
-            border-radius: 20px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 50px; /* 膠囊狀 */
+            font-size: 15px;
+            font-weight: 600;
             text-decoration: none;
-            margin: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: background 0.2s;
+            margin: 8px 5px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
         }
 
-        /* 查看結果按鈕 (綠色) */
+        /* 查看結果按鈕 (綠色系) */
         .check-result-btn {
-            background-color: #4CAF50;
+            background-color: var(--success-color);
             color: white;
+            box-shadow: 0 4px 6px rgba(39, 174, 96, 0.2);
         }
         
         .check-result-btn:hover {
-            background-color: #388E3C;
+            background-color: #219150;
+            transform: translateY(-1px);
         }
 
-        /* 幫其他人登記按鈕 (灰色) */
+        /* 幫其他人登記按鈕 (簡約線框) */
         .reload-btn {
-            background-color: #f5f5f5;
-            border: 1px solid #ccc;
-            color: #666;
+            background-color: transparent;
+            border: 1px solid #bdc3c7;
+            color: #7f8c8d;
         }
         
         .reload-btn:hover {
-            background-color: #e0e0e0;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: #fff;
         }
     </style>
 </head>
@@ -214,7 +256,7 @@
     <form id="orderForm">
         <div class="form-group">
             <label for="username">訂購人姓名</label>
-            <input type="text" id="username" placeholder="請輸入您的名字" required>
+            <input type="text" id="username" placeholder="請輸入全名" required>
         </div>
 
         <div class="form-group">
@@ -268,21 +310,22 @@
         </div>
 
         <div class="price-display">
-            總金額：NT$ <span id="priceLabel">0</span>
+            <span>預估金額</span>
+            NT$ <span id="priceLabel">0</span>
         </div>
 
-        <button type="submit" id="submitBtn" class="submit-btn">送出訂單</button>
-        <div class="loading" id="loading">資料傳送中，請稍候...</div>
+        <button type="submit" id="submitBtn" class="submit-btn">確認送出訂單</button>
+        <div class="loading" id="loading">資料同步中，請稍候...</div>
     </form>
     
     <div class="success-msg" id="successMsg">
         <div class="success-title">✅ 登記完成</div>
         
-        <div style="margin-top: 15px;">
+        <div style="margin-top: 20px;">
             <a href="https://docs.google.com/spreadsheets/d/1ZpzttgDqG8vcOMQ5iqo6ZL6l1nUvSWXcgE6iqfw3tE4/edit?usp=sharing" target="_blank" class="action-btn check-result-btn">
                 查看登記結果
             </a>
-            
+            <br>
             <a href="https://graceyiyo-cloud.github.io/order3/" class="action-btn reload-btn">
                 幫其他人登記
             </a>
