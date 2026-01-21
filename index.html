@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>麻古茶坊 MACU 線上點餐</title>
+    <style>
+        :root {
+            --primary-color: #D32F2F; /* 麻古紅 */
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* 讓選單中的分類標題明顯一點 */
+        optgroup {
+            font-style: normal;
+            font-weight: bold;
+            color: #D32F2F;
+        }
+
+        .price-display {
+            text-align: right;
+            font-size: 1.2em;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #b71c1c;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .success-msg {
+            display: none;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>MACU 麻古茶坊</h1>
+        <p>線上點餐登記</p>
+    </header>
+
+    <form id="orderForm">
+        <div class="form-group">
+            <label for="username">訂購人姓名</label>
+            <input type="text" id="username" placeholder="請輸入您的名字" required>
+        </div>
+
+        <div class="form-group">
+            <label for="drink">選擇飲品</label>
+            <select id="drink" required>
+                <option value="" disabled selected>請選擇飲品...</option>
+                </select>
+        </div>
+
+        <div class="form-group">
+            <label for="topping">加入口感 (加料)</label>
+            <select id="topping">
+                <option value="無" data-price="0" selected>無</option>
+                <option value="波霸" data-price="10">波霸 (+10元)</option>
+                <option value="椰果" data-price="10">椰果 (+10元)</option>
+                <option value="雙Q果" data-price="10">雙Q果 (+10元)</option>
+                <option value="養樂多" data-price="10">養樂多 (+10元)</option>
+                <option value="波波" data-price="10">波波 (寒天) (+10元)</option>
+                <option value="波波條" data-price="10">波波條 (+10元)</option>
+                <option value="仙草凍" data-price="10">仙草凍 (+10元)</option>
+                <option value="綠茶凍" data-price="10">綠茶凍 (+10元)</option>
+                <option value="芝芝" data-price="20">芝芝 (濃郁奶蓋) (+20元)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sugar">甜度</label>
+            <select id="sugar" required>
+                <option value="正常糖">正常糖</option>
+                <option value="少糖">少糖 (8分)</option>
+                <option value="半糖">半糖 (5分)</option>
+                <option value="微糖">微糖 (3分)</option>
+                <option value="二分糖">二分糖 (2分)</option>
+                <option value="一分糖">一分糖 (1分)</option>
+                <option value="無糖">無糖</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="ice">冰塊</label>
+            <select id="ice" required>
+                <option value="正常冰">正常冰</option>
+                <option value="少冰">少冰</option>
+                <option value="微冰">微冰</option>
+                <option value="去冰">去冰</option>
+                <option value="完全去冰">完全去冰</option>
+                <option value="熱飲">熱飲</option>
+            </select>
+        </div>
+
+        <div class="price-display">
+            總金額：NT$ <span id="priceLabel">0</span>
+        </div>
+
+        <button type="submit" id="submitBtn">送出訂單</button>
+        <div class="loading" id="loading">訂單傳送中...</div>
+    </form>
+    
+    <div class="success-msg" id="successMsg">
+        訂單已送出！感謝您的訂購。<br>
+        <button onclick="location.reload()" style="margin-top:10px; padding:10px; width:auto; font-size:14px;">再點一杯</button>
+    </div>
+</div>
+
+<script>
+    // ----------- 設定區域 -----------
+    // 您的 Google Apps Script 網址
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbxECKpWPU3Z7Lj16-OqZZAKrdwK9CYL2QrVf3cvZajXucSoYiIuKcIla1Bp6CoY6MHQ/exec"; 
+    // ------------------------------
+
+    // 菜單資料 (使用巢狀結構是為了產生分類標題，但選單是單層的)
+    const menuData = {
+        "飲中甜品 (季節限定/冰沙)": {
+            "楊枝甘露2.0": 85,
+            "芝芝葡萄果粒": 85,
+            "葡萄果粒波波": 85,
+            "芋泥波波鮮奶": 85,
+            "番茄梅蜜": 70
+        },
+        "原味茶 (Original Tea)": {
+            "高山金萱茶": 30,
+            "翡翠綠茶": 30,
+            "錫蘭紅茶": 30,
+            "古早味紅茶": 30,
+            "金萱雙Q": 40
+        },
+        "芝芝系列 (Cheese Tea)": {
+            "芝芝金萱雙Q": 60,
+            "芝芝錫蘭紅茶": 50,
+            "芝芝阿華田": 80
+        },
+        "果粒茶系列 (Fruit Tea)": {
+            "香橙果粒茶": 75,
+            "柳橙果粒茶": 70,
+            "葡萄柚果粒茶": 65,
+            "葡萄柚果粒蜜茶": 65
+        },
+        "鮮奶系列 (Milk Tea)": {
+            "紅茶拿鐵": 65,
+            "鐵觀音拿鐵": 65,
+            "波霸紅茶拿鐵": 65,
+            "玫瑰紅茶拿鐵": 70
+        },
+        "奶茶系列 (Milk Tea)": {
+            "錫蘭奶茶": 50,
+            "波霸奶茶": 50,
+            "阿華田": 60
+        }
+    };
+
+    // DOM 元素
+    const drinkSelect = document.getElementById('drink');
+    const toppingSelect = document.getElementById('topping');
+    const priceLabel = document.getElementById('priceLabel');
+    const form = document.getElementById('orderForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingDiv = document.getElementById('loading');
+    const successMsg = document.getElementById('successMsg');
+
+    // 初始化：載入飲品到單一選單中 (使用 optgroup 分類)
+    Object.keys(menuData).forEach(category => {
+        const group = document.createElement('optgroup');
+        group.label = category;
+        
+        Object.keys(menuData[category]).forEach(drink => {
+            const option = document.createElement('option');
+            option.value = drink;
+            option.textContent = drink + " ($" + menuData[category][drink] + ")";
+            // 將價格存入 data-price 屬性方便計算
+            option.dataset.price = menuData[category][drink];
+            group.appendChild(option);
+        });
+        
+        drinkSelect.appendChild(group);
+    });
+
+    // 監聽價格變動
+    drinkSelect.addEventListener('change', updatePrice);
+    toppingSelect.addEventListener('change', updatePrice);
+
+    // 更新價格函式
+    function updatePrice() {
+        let basePrice = 0;
+        let toppingPrice = 0;
+
+        // 取得飲料價格
+        const selectedDrinkOption = drinkSelect.options[drinkSelect.selectedIndex];
+        if (selectedDrinkOption && selectedDrinkOption.dataset.price) {
+            basePrice = parseInt(selectedDrinkOption.dataset.price);
+        }
+
+        // 取得加料價格
+        const selectedToppingOption = toppingSelect.options[toppingSelect.selectedIndex];
+        if (selectedToppingOption && selectedToppingOption.dataset.price) {
+            toppingPrice = parseInt(selectedToppingOption.dataset.price);
+        }
+
+        // 計算總金額
+        const totalPrice = basePrice + toppingPrice;
+        priceLabel.textContent = totalPrice;
+    }
+
+    // 送出表單
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 檢查價格
+        if (priceLabel.textContent === '0') {
+            alert('請確認飲品選擇');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = '處理中...';
+        loadingDiv.style.display = 'block';
+
+        const data = {
+            name: document.getElementById('username').value,
+            // 類別已移除
+            drink: drinkSelect.value,
+            topping: toppingSelect.value, // 新增加料欄位
+            sugar: document.getElementById('sugar').value,
+            ice: document.getElementById('ice').value,
+            price: priceLabel.textContent
+        };
+
+        // 使用 fetch 送出資料
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: new URLSearchParams(data)
+        })
+        .then(response => response.text())
+        .then(result => {
+            loadingDiv.style.display = 'none';
+            form.style.display = 'none';
+            successMsg.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('發生錯誤，請稍後再試。');
+            submitBtn.disabled = false;
+            submitBtn.textContent = '送出訂單';
+            loadingDiv.style.display = 'none';
+        });
+    });
+</script>
+
+</body>
+</html>
