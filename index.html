@@ -100,11 +100,11 @@
             background-color: #f9fbfc;
             color: #2c3e50 !important;
             transition: all 0.3s ease;
-            -webkit-appearance: none; /* 移除 iOS 預設圓角陰影 */
+            -webkit-appearance: none; /* 移除 iOS 預設圓角 */
             appearance: none;
         }
 
-        /* 針對 Select 增加一個自訂箭頭，因為移除了預設外觀 */
+        /* 針對 Select 增加一個自訂箭頭 */
         select {
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232c3e50%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
@@ -137,16 +137,16 @@
         }
         
         .option-btn {
-            padding: 12px 5px; /* 增加高度，方便手機點擊 */
+            padding: 12px 5px;
             border: 1px solid var(--border-color);
             background-color: #fff;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 15px; /* 字體微調大 */
+            font-size: 15px;
             font-weight: 500;
             color: var(--text-sub);
             transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent; /* 移除手機點擊藍色區塊 */
+            -webkit-tap-highlight-color: transparent;
         }
         
         .option-btn:hover {
@@ -287,18 +287,27 @@
         </div>
 
         <div class="form-group">
-            <label for="topping">加入口感 (加料)</label>
+            <label for="topping">加入口感 (配料)</label>
             <select id="topping">
                 <option value="無" data-price="0" selected>無</option>
-                <option value="波霸" data-price="10">波霸 (+10元)</option>
-                <option value="椰果" data-price="10">椰果 (+10元)</option>
-                <option value="雙Q果" data-price="10">雙Q果 (+10元)</option>
-                <option value="養樂多" data-price="10">養樂多 (+10元)</option>
-                <option value="波波" data-price="10">波波 (寒天) (+10元)</option>
-                <option value="波波條" data-price="10">波波條 (+10元)</option>
-                <option value="仙草凍" data-price="10">仙草凍 (+10元)</option>
-                <option value="綠茶凍" data-price="10">綠茶凍 (+10元)</option>
-                <option value="芝芝" data-price="20">芝芝 (濃郁奶蓋) (+20元)</option>
+                
+                <optgroup label="+10元 配料">
+                    <option value="玉米圓" data-price="10">玉米圓 (+10元)</option>
+                    <option value="紅萱粉粿" data-price="10">紅萱粉粿 (限冷飲) (+10元)</option>
+                    <option value="波霸" data-price="10">波霸 (+10元)</option>
+                    <option value="椰果" data-price="10">椰果 (+10元)</option>
+                    <option value="雙Q果" data-price="10">雙Q果 (+10元)</option>
+                    <option value="波波" data-price="10">波波 (+10元)</option>
+                    <option value="波波條" data-price="10">波波條 (+10元)</option>
+                    <option value="綠茶凍" data-price="10">綠茶凍 (限冷飲) (+10元)</option>
+                    <option value="仙草凍" data-price="10">仙草凍 (+10元)</option>
+                    <option value="養樂多" data-price="10">養樂多 (+10元)</option>
+                </optgroup>
+
+                <optgroup label="+20元 配料">
+                    <option value="金絨芝芝" data-price="20">金絨芝芝 (+20元)</option>
+                    <option value="芝芝" data-price="20">芝芝 (+20元)</option>
+                </optgroup>
             </select>
         </div>
 
@@ -360,41 +369,77 @@
 
     // 菜單資料
     const menuData = {
-        "飲中甜品 (季節限定/冰沙)": {
-            "楊枝甘露2.0": 85,
+        "季節限定": {
+            "金盛芋泥鮮奶(M)": 75,
+            "金盛芋泥玉米圓(M)": 75,
+            "芋泥波波鮮奶2.0(M)": 65,
+            "濃厚芋泥鮮奶(M)": 65,
+            "巨峰葡萄冰沙": 75,
             "芝芝葡萄果粒": 85,
-            "葡萄果粒波波": 85,
-            "芋泥波波鮮奶": 85,
-            "番茄梅蜜": 70
+            "葡萄果粒波波": 85
         },
-        "原味茶 (Original Tea)": {
-            "高山金萱茶": 30,
-            "翡翠綠茶": 30,
-            "錫蘭紅茶": 30,
-            "古早味紅茶": 30,
-            "金萱雙Q": 40
-        },
-        "芝芝系列 (Cheese Tea)": {
-            "芝芝金萱雙Q": 60,
-            "芝芝錫蘭紅茶": 50,
-            "芝芝阿華田": 80
-        },
-        "果粒茶系列 (Fruit Tea)": {
+        "果粒茶系列": {
             "香橙果粒茶": 75,
             "柳橙果粒茶": 70,
             "葡萄柚果粒茶": 65,
             "葡萄柚果粒蜜茶": 65
         },
-        "鮮奶系列 (Milk Tea)": {
+        "原味茶": {
+            "粉粿金萱": 40,
+            "紅萱烏龍": 35,
+            "高山金萱茶": 30,
+            "翡翠綠茶": 30,
+            "錫蘭紅茶": 30,
+            "文山青茶": 30,
+            "古早味紅茶": 30,
+            "紅萱雙Q": 45,
+            "金萱雙Q": 40
+        },
+        "濃醇系列": {
+            "錫蘭奶茶": 50,
+            "鐵觀音奶茶": 50,
+            "波霸奶茶": 50,
+            "仙草凍奶茶": 50,
+            "玫瑰奶茶": 60,
+            "阿華田": 60
+        },
+        "經典特調": {
+            "梅子冰茶": 35,
+            "梅子綠茶": 45,
+            "多多綠茶": 50
+        },
+        "鮮果茶飲": {
+            "粉粿橙香紅茶": 75,
+            "橙香紅茶": 65,
+            "柚香紅茶": 60,
+            "百香雙Q果": 60,
+            "百香綠茶": 55,
+            "百香多多": 60,
+            "翡翠柳橙": 60,
+            "粉粿冰萃檸檬": 60,
+            "冰萃檸檬": 50,
+            "蜂蜜檸檬": 60,
+            "柚香翡翠": 55
+        },
+        "芝芝系列": {
+            "芝芝金萱": 50,
+            "芝芝錫蘭紅茶": 50,
+            "芝芝金萱雙Q": 60,
+            "芝芝翡翠綠茶": 50,
+            "芝芝鐵觀音奶茶": 65,
+            "芝芝阿華田": 80
+        },
+        "寶石系列(無咖啡因)": {
+            "蕎麥綠寶石": 40
+        },
+        "鮮奶系列": {
+            "粉粿紅茶拿鐵": 65,
             "紅茶拿鐵": 65,
             "鐵觀音拿鐵": 65,
             "波霸紅茶拿鐵": 65,
+            "仙草凍紅茶拿鐵": 65,
+            "阿華田拿鐵": 65,
             "玫瑰紅茶拿鐵": 70
-        },
-        "奶茶系列 (Milk Tea)": {
-            "錫蘭奶茶": 50,
-            "波霸奶茶": 50,
-            "阿華田": 60
         }
     };
 
