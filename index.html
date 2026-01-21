@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>麻古茶坊 MACU 線上點餐</title>
+    <title>1/26(一)年會排演工作人員點餐</title>
     <style>
         :root {
             --primary-color: #D32F2F; /* 麻古紅 */
             --bg-color: #f5f5f5;
-            --text-color: #333;
+            --text-color: #000000; /* 純黑 */
         }
 
         body {
@@ -39,19 +39,27 @@
             color: var(--primary-color);
             margin: 0;
             letter-spacing: 2px;
+            font-size: 24px;
+        }
+        
+        header p {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 10px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: bold;
-            font-size: 0.95em;
+            font-size: 1em;
         }
 
+        /* 輸入框與下拉選單樣式 */
         input, select {
             width: 100%;
             padding: 12px;
@@ -60,30 +68,65 @@
             font-size: 16px;
             box-sizing: border-box;
             background-color: #fff;
+            color: black !important;
         }
 
         input:focus, select:focus {
             border-color: var(--primary-color);
             outline: none;
         }
-
-        /* 讓選單中的分類標題明顯一點 */
+        
         optgroup {
-            font-style: normal;
+            color: var(--primary-color);
             font-weight: bold;
-            color: #D32F2F;
+        }
+        
+        option {
+            color: black;
+        }
+
+        /* 按鈕式選項樣式 (甜度/冰塊) */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .option-btn {
+            padding: 10px 5px;
+            border: 1px solid #ccc;
+            background-color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s;
+            color: #333;
+        }
+        
+        .option-btn:hover {
+            background-color: #ffebee;
+        }
+        
+        .option-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            font-weight: bold;
         }
 
         .price-display {
             text-align: right;
-            font-size: 1.2em;
+            font-size: 1.3em;
             color: var(--primary-color);
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 20px;
             margin-bottom: 20px;
+            border-top: 1px dashed #ccc;
+            padding-top: 15px;
         }
 
-        button {
+        /* 送出按鈕 */
+        .submit-btn {
             width: 100%;
             background-color: var(--primary-color);
             color: white;
@@ -95,11 +138,11 @@
             transition: background 0.3s;
         }
 
-        button:hover {
+        .submit-btn:hover {
             background-color: #b71c1c;
         }
 
-        button:disabled {
+        .submit-btn:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
@@ -108,16 +151,55 @@
             display: none;
             text-align: center;
             margin-top: 10px;
+            color: #666;
         }
         
+        /* 成功訊息區域 */
         .success-msg {
             display: none;
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            padding: 15px;
-            border-radius: 8px;
             text-align: center;
-            margin-top: 20px;
+            padding-top: 10px;
+        }
+        
+        .success-title {
+            color: #2e7d32;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* 通用連結按鈕樣式 */
+        .action-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+
+        /* 查看結果按鈕 (綠色) */
+        .check-result-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .check-result-btn:hover {
+            background-color: #388E3C;
+        }
+
+        /* 幫其他人登記按鈕 (灰色) */
+        .reload-btn {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            color: #666;
+        }
+        
+        .reload-btn:hover {
+            background-color: #e0e0e0;
         }
     </style>
 </head>
@@ -126,7 +208,7 @@
 <div class="container">
     <header>
         <h1>MACU 麻古茶坊</h1>
-        <p>線上點餐登記</p>
+        <p>1/26(一)年會排演工作人員點餐</p>
     </header>
 
     <form id="orderForm">
@@ -159,51 +241,61 @@
         </div>
 
         <div class="form-group">
-            <label for="sugar">甜度</label>
-            <select id="sugar" required>
-                <option value="正常糖">正常糖</option>
-                <option value="少糖">少糖 (8分)</option>
-                <option value="半糖">半糖 (5分)</option>
-                <option value="微糖">微糖 (3分)</option>
-                <option value="二分糖">二分糖 (2分)</option>
-                <option value="一分糖">一分糖 (1分)</option>
-                <option value="無糖">無糖</option>
-            </select>
+            <label>甜度</label>
+            <div class="options-grid" id="sugarOptions">
+                <button type="button" class="option-btn" onclick="selectOption('sugar', this)">正常糖</button>
+                <button type="button" class="option-btn" onclick="selectOption('sugar', this)">少糖</button>
+                <button type="button" class="option-btn" onclick="selectOption('sugar', this)">半糖</button>
+                <button type="button" class="option-btn" onclick="selectOption('sugar', this)">微糖</button>
+                <button type="button" class="option-btn" onclick="selectOption('sugar', this)">二分糖</button>
+                <button type="button" class="option-btn" onclick="selectOption('sugar', this)">一分糖</button>
+                <button type="button" class="option-btn" onclick="selectOption('sugar', this)">無糖</button>
+            </div>
+            <input type="hidden" id="sugar" required> 
         </div>
 
         <div class="form-group">
-            <label for="ice">冰塊</label>
-            <select id="ice" required>
-                <option value="正常冰">正常冰</option>
-                <option value="少冰">少冰</option>
-                <option value="微冰">微冰</option>
-                <option value="去冰">去冰</option>
-                <option value="完全去冰">完全去冰</option>
-                <option value="熱飲">熱飲</option>
-            </select>
+            <label>冰塊</label>
+            <div class="options-grid" id="iceOptions">
+                <button type="button" class="option-btn" onclick="selectOption('ice', this)">正常冰</button>
+                <button type="button" class="option-btn" onclick="selectOption('ice', this)">少冰</button>
+                <button type="button" class="option-btn" onclick="selectOption('ice', this)">微冰</button>
+                <button type="button" class="option-btn" onclick="selectOption('ice', this)">去冰</button>
+                <button type="button" class="option-btn" onclick="selectOption('ice', this)">完全去冰</button>
+                <button type="button" class="option-btn" onclick="selectOption('ice', this)">熱飲</button>
+            </div>
+            <input type="hidden" id="ice" required> 
         </div>
 
         <div class="price-display">
             總金額：NT$ <span id="priceLabel">0</span>
         </div>
 
-        <button type="submit" id="submitBtn">送出訂單</button>
-        <div class="loading" id="loading">訂單傳送中...</div>
+        <button type="submit" id="submitBtn" class="submit-btn">送出訂單</button>
+        <div class="loading" id="loading">資料傳送中，請稍候...</div>
     </form>
     
     <div class="success-msg" id="successMsg">
-        訂單已送出！感謝您的訂購。<br>
-        <button onclick="location.reload()" style="margin-top:10px; padding:10px; width:auto; font-size:14px;">再點一杯</button>
+        <div class="success-title">✅ 登記完成</div>
+        
+        <div style="margin-top: 15px;">
+            <a href="https://docs.google.com/spreadsheets/d/1ZpzttgDqG8vcOMQ5iqo6ZL6l1nUvSWXcgE6iqfw3tE4/edit?usp=sharing" target="_blank" class="action-btn check-result-btn">
+                查看登記結果
+            </a>
+            
+            <a href="https://graceyiyo-cloud.github.io/order3/" class="action-btn reload-btn">
+                幫其他人登記
+            </a>
+        </div>
     </div>
 </div>
 
 <script>
     // ----------- 設定區域 -----------
-    // 您的 Google Apps Script 網址
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbxECKpWPU3Z7Lj16-OqZZAKrdwK9CYL2QrVf3cvZajXucSoYiIuKcIla1Bp6CoY6MHQ/exec"; 
     // ------------------------------
 
-    // 菜單資料 (使用巢狀結構是為了產生分類標題，但選單是單層的)
+    // 菜單資料
     const menuData = {
         "飲中甜品 (季節限定/冰沙)": {
             "楊枝甘露2.0": 85,
@@ -251,59 +343,62 @@
     const submitBtn = document.getElementById('submitBtn');
     const loadingDiv = document.getElementById('loading');
     const successMsg = document.getElementById('successMsg');
+    const sugarInput = document.getElementById('sugar');
+    const iceInput = document.getElementById('ice');
 
-    // 初始化：載入飲品到單一選單中 (使用 optgroup 分類)
+    // 初始化：載入飲品
     Object.keys(menuData).forEach(category => {
         const group = document.createElement('optgroup');
         group.label = category;
-        
         Object.keys(menuData[category]).forEach(drink => {
             const option = document.createElement('option');
             option.value = drink;
             option.textContent = drink + " ($" + menuData[category][drink] + ")";
-            // 將價格存入 data-price 屬性方便計算
             option.dataset.price = menuData[category][drink];
             group.appendChild(option);
         });
-        
         drinkSelect.appendChild(group);
     });
+
+    // 處理按鈕點選 (甜度/冰塊)
+    window.selectOption = function(type, btnElement) {
+        const container = document.getElementById(type + 'Options');
+        const buttons = container.getElementsByClassName('option-btn');
+        Array.from(buttons).forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+        document.getElementById(type).value = btnElement.innerText;
+    };
 
     // 監聽價格變動
     drinkSelect.addEventListener('change', updatePrice);
     toppingSelect.addEventListener('change', updatePrice);
 
-    // 更新價格函式
     function updatePrice() {
         let basePrice = 0;
         let toppingPrice = 0;
 
-        // 取得飲料價格
         const selectedDrinkOption = drinkSelect.options[drinkSelect.selectedIndex];
         if (selectedDrinkOption && selectedDrinkOption.dataset.price) {
             basePrice = parseInt(selectedDrinkOption.dataset.price);
         }
 
-        // 取得加料價格
         const selectedToppingOption = toppingSelect.options[toppingSelect.selectedIndex];
         if (selectedToppingOption && selectedToppingOption.dataset.price) {
             toppingPrice = parseInt(selectedToppingOption.dataset.price);
         }
 
-        // 計算總金額
-        const totalPrice = basePrice + toppingPrice;
-        priceLabel.textContent = totalPrice;
+        priceLabel.textContent = basePrice + toppingPrice;
     }
 
     // 送出表單
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // 檢查價格
-        if (priceLabel.textContent === '0') {
-            alert('請確認飲品選擇');
-            return;
-        }
+        // 驗證
+        if (!drinkSelect.value) { alert('請選擇飲品'); return; }
+        if (!sugarInput.value) { alert('請點選甜度'); return; }
+        if (!iceInput.value) { alert('請點選冰塊'); return; }
+        if (priceLabel.textContent === '0') { alert('金額異常'); return; }
 
         submitBtn.disabled = true;
         submitBtn.textContent = '處理中...';
@@ -311,28 +406,28 @@
 
         const data = {
             name: document.getElementById('username').value,
-            // 類別已移除
             drink: drinkSelect.value,
-            topping: toppingSelect.value, // 新增加料欄位
-            sugar: document.getElementById('sugar').value,
-            ice: document.getElementById('ice').value,
+            topping: toppingSelect.value,
+            sugar: sugarInput.value,
+            ice: iceInput.value,
             price: priceLabel.textContent
         };
 
-        // 使用 fetch 送出資料
+        // 使用 no-cors 模式
         fetch(SCRIPT_URL, {
             method: 'POST',
-            body: new URLSearchParams(data)
+            body: new URLSearchParams(data),
+            mode: 'no-cors'
         })
-        .then(response => response.text())
-        .then(result => {
+        .then(() => {
             loadingDiv.style.display = 'none';
             form.style.display = 'none';
             successMsg.style.display = 'block';
+            window.scrollTo(0, 0); 
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('發生錯誤，請稍後再試。');
+            alert('發生錯誤，但資料可能已送出，請檢查試算表。');
             submitBtn.disabled = false;
             submitBtn.textContent = '送出訂單';
             loadingDiv.style.display = 'none';
