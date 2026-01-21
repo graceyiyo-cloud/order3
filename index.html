@@ -15,6 +15,7 @@
             --text-sub: #7f8c8d;         /* 次要文字 */
             --border-color: #dce4ec;     /* 邊框色 */
             --success-color: #27ae60;    /* 成功綠 */
+            --error-color: #e74c3c;      /* 警示紅 */
         }
 
         body {
@@ -36,6 +37,8 @@
             box-shadow: 0 10px 30px rgba(44, 62, 80, 0.1);
             width: 100%; /* 確保手機版寬度 */
             box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
+            position: relative;
+            overflow: hidden;
         }
 
         /* 手機版專用調整 */
@@ -75,6 +78,17 @@
             font-size: 1.5em;
             margin: 0;
             color: var(--text-main);
+        }
+
+        .deadline-notice {
+            color: var(--error-color);
+            font-size: 0.95em;
+            margin-top: 8px;
+            font-weight: 600;
+            display: inline-block;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
         }
 
         .form-group {
@@ -119,6 +133,13 @@
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
         
+        input:disabled, select:disabled, button:disabled {
+            background-color: #e0e0e0;
+            color: #a0a0a0 !important;
+            cursor: not-allowed;
+            border-color: #d0d0d0;
+        }
+
         optgroup {
             color: var(--accent-color);
             font-weight: 700;
@@ -202,7 +223,7 @@
         }
 
         .submit-btn:disabled {
-            background: #bdc3c7;
+            background: #95a5a6; /* 灰色 */
             cursor: not-allowed;
             box-shadow: none;
         }
@@ -271,6 +292,7 @@
     <header>
         <h1>MACU 麻古茶坊</h1>
         <p>1/26(一)年會排演工作人員點餐</p>
+        <div class="deadline-notice">🕒 截止時間：2026/1/23 (五) 14:00</div>
     </header>
 
     <form id="orderForm">
@@ -339,11 +361,11 @@
         </div>
 
         <div class="price-display">
-            <span>預估金額</span>
-            NT$ <span id="priceLabel">0</span>
+            <span>金額</span>
+            <span>NT$<span id="priceLabel">0</span></span>
         </div>
 
-        <button type="submit" id="submitBtn" class="submit-btn">確認送出訂單</button>
+        <button type="submit" id="submitBtn" class="submit-btn">確認登記</button>
         <div class="loading" id="loading">資料同步中，請稍候...</div>
     </form>
     
@@ -365,6 +387,7 @@
 <script>
     // ----------- 設定區域 -----------
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbxECKpWPU3Z7Lj16-OqZZAKrdwK9CYL2QrVf3cvZajXucSoYiIuKcIla1Bp6CoY6MHQ/exec"; 
+    const DEADLINE = new Date("2026-01-23T14:00:00"); // 設定截止時間：2026/01/23 下午2點
     // ------------------------------
 
     // 菜單資料
@@ -409,9 +432,9 @@
             "多多綠茶": 50
         },
         "鮮果茶飲": {
-            "粉粿橙香紅茶": 75,
-            "橙香紅茶": 65,
-            "柚香紅茶": 60,
+            "粉粿橙香紅萱": 75,
+            "橙香紅萱": 65,
+            "柚香紅萱": 60,
             "百香雙Q果": 60,
             "百香綠茶": 55,
             "百香多多": 60,
@@ -468,8 +491,30 @@
         drinkSelect.appendChild(group);
     });
 
+    // 檢查截止時間函式
+    function checkDeadline() {
+        const now = new Date();
+        if (now > DEADLINE) {
+            // 停用所有輸入項
+            const inputs = document.querySelectorAll('input, select, button.option-btn');
+            inputs.forEach(el => el.disabled = true);
+            
+            // 變更送出按鈕狀態
+            submitBtn.textContent = "已超過截止時間 (1/23 14:00)";
+            submitBtn.disabled = true;
+            return false; // 已過期
+        }
+        return true; // 未過期
+    }
+
+    // 頁面載入時先檢查一次
+    checkDeadline();
+
     // 處理按鈕點選 (甜度/冰塊)
     window.selectOption = function(type, btnElement) {
+        // 如果已過期，不允許點選
+        if (!checkDeadline()) return;
+
         const container = document.getElementById(type + 'Options');
         const buttons = container.getElementsByClassName('option-btn');
         Array.from(buttons).forEach(btn => btn.classList.remove('active'));
@@ -501,6 +546,12 @@
     // 送出表單
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+
+        // 再次檢查截止時間 (防止頁面停留太久跨過時間點)
+        if (!checkDeadline()) {
+            alert('很抱歉，已經超過截止時間 (2026/1/23 14:00)，無法再送出訂單。');
+            return;
+        }
 
         // 驗證
         if (!drinkSelect.value) { alert('請選擇飲品'); return; }
@@ -537,7 +588,7 @@
             console.error('Error:', error);
             alert('發生錯誤，但資料可能已送出，請檢查試算表。');
             submitBtn.disabled = false;
-            submitBtn.textContent = '送出訂單';
+            submitBtn.textContent = '確認登記';
             loadingDiv.style.display = 'none';
         });
     });
