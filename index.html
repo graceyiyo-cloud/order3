@@ -185,7 +185,7 @@
 
         .price-display {
             text-align: right;
-            font-size: 1.4em;
+            font-size: 1.3em; /* 統一字體大小 */
             color: var(--primary-color);
             font-weight: 700;
             margin-top: 30px;
@@ -198,9 +198,9 @@
         }
         
         .price-display span:first-child {
-            font-size: 0.6em;
-            color: var(--text-sub);
-            font-weight: normal;
+            /* 移除原本縮小字體的設定，讓"金額"跟數字一樣大 */
+            color: var(--text-main);
+            font-weight: 700;
         }
 
         .submit-btn {
