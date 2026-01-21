@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>1/26(一)年會排演工作人員點餐</title>
     <style>
         :root {
@@ -21,9 +21,10 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px 15px 80px 15px; /* 底部增加 80px 避免被 LINE 工具列擋住 */
             color: var(--text-main);
             line-height: 1.6;
+            -webkit-text-size-adjust: 100%; /* 禁止 iOS 自動調整字體大小 */
         }
 
         .container {
@@ -32,24 +33,41 @@
             background: var(--card-bg);
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(44, 62, 80, 0.1); /* 柔和深邃的陰影 */
+            box-shadow: 0 10px 30px rgba(44, 62, 80, 0.1);
+            width: 100%; /* 確保手機版寬度 */
+            box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
+        }
+
+        /* 手機版專用調整 */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px; /* 手機版縮小內距 */
+            }
+            body {
+                padding-top: 20px;
+            }
+            h1 {
+                font-size: 18px;
+            }
+            header p {
+                font-size: 1.3em;
+            }
         }
 
         header {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 20px;
         }
 
         h1 {
-            color: var(--primary-color);
+            color: var(--text-sub);
             margin: 0 0 10px 0;
             font-size: 20px;
             font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
-            color: var(--text-sub);
         }
         
         header p {
@@ -71,17 +89,27 @@
             color: var(--text-main);
         }
 
-        /* 輸入框與下拉選單樣式 - 更加平整現代 */
+        /* 輸入框與下拉選單樣式 */
         input, select {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 16px !important; /* 強制 16px 防止 iOS Zoom In */
             box-sizing: border-box;
             background-color: #f9fbfc;
             color: #2c3e50 !important;
             transition: all 0.3s ease;
+            -webkit-appearance: none; /* 移除 iOS 預設圓角陰影 */
+            appearance: none;
+        }
+
+        /* 針對 Select 增加一個自訂箭頭，因為移除了預設外觀 */
+        select {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232c3e50%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px top 50%;
+            background-size: 12px auto;
         }
 
         input:focus, select:focus {
@@ -101,7 +129,7 @@
             padding: 5px;
         }
 
-        /* 按鈕式選項樣式 (甜度/冰塊) */
+        /* 按鈕式選項樣式 */
         .options-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -109,15 +137,16 @@
         }
         
         .option-btn {
-            padding: 10px 5px;
+            padding: 12px 5px; /* 增加高度，方便手機點擊 */
             border: 1px solid var(--border-color);
             background-color: #fff;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px; /* 字體微調大 */
             font-weight: 500;
             color: var(--text-sub);
             transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent; /* 移除手機點擊藍色區塊 */
         }
         
         .option-btn:hover {
@@ -126,7 +155,6 @@
             background-color: #f4f9fd;
         }
         
-        /* 被選中的狀態 - 深藍色實心 */
         .option-btn.active {
             background-color: var(--primary-color);
             color: white;
@@ -154,7 +182,6 @@
             font-weight: normal;
         }
 
-        /* 送出按鈕 - 漸層深藍 */
         .submit-btn {
             width: 100%;
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
@@ -167,11 +194,7 @@
             cursor: pointer;
             transition: transform 0.1s, box-shadow 0.3s;
             letter-spacing: 1px;
-        }
-
-        .submit-btn:hover {
-            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.3);
-            transform: translateY(-1px);
+            -webkit-appearance: none;
         }
 
         .submit-btn:active {
@@ -192,7 +215,6 @@
             font-size: 0.9em;
         }
         
-        /* 成功訊息區域 */
         .success-msg {
             display: none;
             text-align: center;
@@ -206,20 +228,19 @@
             margin-bottom: 30px;
         }
 
-        /* 連結按鈕共用樣式 */
         .action-btn {
             display: inline-block;
             padding: 12px 30px;
-            border-radius: 50px; /* 膠囊狀 */
+            border-radius: 50px;
             font-size: 15px;
             font-weight: 600;
             text-decoration: none;
             margin: 8px 5px;
             transition: all 0.2s;
             border: 1px solid transparent;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* 查看結果按鈕 (綠色系) */
         .check-result-btn {
             background-color: var(--success-color);
             color: white;
@@ -231,7 +252,6 @@
             transform: translateY(-1px);
         }
 
-        /* 幫其他人登記按鈕 (簡約線框) */
         .reload-btn {
             background-color: transparent;
             border: 1px solid #bdc3c7;
